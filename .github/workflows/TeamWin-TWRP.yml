@@ -167,8 +167,13 @@ jobs:
         cd android-recovery
         source build/envsetup.sh
         export ALLOW_MISSING_DEPENDENCIES=true
-        lunch ${{ env.DEVICE_MAKEFILE }}-eng && make clean && make ${{ inputs.BUILD_TARGET }}image -j$(nproc --all)
-        echo "Done building your ${{ inputs.BUILD_TARGET }}.img"
+        if [ ${{ inputs.MANIFEST_BRANCH }} == 'twrp-14.1' ]; then
+            lunch ${{ env.DEVICE_MAKEFILE }}-ap2a-eng && make clean && make ${{ inputs.BUILD_TARGET }}image -j$(nproc --all)
+            echo "Done building your ${{ inputs.BUILD_TARGET }}.img"
+        else
+            lunch ${{ env.DEVICE_MAKEFILE }}-eng && make clean && make ${{ inputs.BUILD_TARGET }}image -j$(nproc --all)
+            echo "Done building your ${{ inputs.BUILD_TARGET }}.img"
+        fi
 
     - name: Set build target for upload
       run: |

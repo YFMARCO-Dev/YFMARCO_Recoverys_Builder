@@ -163,7 +163,11 @@ jobs:
         cd android-recovery
         source build/envsetup.sh
         export ALLOW_MISSING_DEPENDENCIES=true
-        lunch ${{ env.DEVICE_MAKEFILE }}-eng && mka ${{ inputs.BUILD_TARGET }}
+        if [ ${{ inputs.MANIFEST_BRANCH }} == 'android-14.0' ]; then
+            lunch ${{ env.DEVICE_MAKEFILE }}-ap2a-eng && mka adbd ${{ inputs.BUILD_TARGET }}image
+        else
+            lunch ${{ env.DEVICE_MAKEFILE }}-eng && mka ${{ inputs.BUILD_TARGET }}image
+        fi
 
     - name: Check Build Makefile
       run: |
